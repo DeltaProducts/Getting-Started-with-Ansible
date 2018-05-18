@@ -19,7 +19,7 @@
     command: 'cp {{ config_file }} /mnt/fastpath/startup-config'
     tags: copy cfg
 
-  - name: Configure ICOS/Fastpath Switch
+  - name: Configure ICOS Switch
     shell: 'icos-cfg -a {{ config_file }}'
     register: icos_cfg
     failed_when: icos_cfg.rc != 230
@@ -42,7 +42,7 @@
         timeout=2500
         state=started
 
-  - name: Show ICOS/Fastpath running configuration
+  - name: Show ICOS running configuration
     shell: 'icos-show running-config'
     register: running-config
     tags: show running-config
