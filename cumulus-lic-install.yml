@@ -1,0 +1,21 @@
+---
+
+- hosts: switches
+  connection: ssh 
+  remote_user: cumulus 
+  become: yes 
+  gather_facts: yes 
+
+  vars:
+    http_server: 10.62.10.22
+    license_file: http://{{ http_server }}/cumulus-linux-3.5.0-bcm-amd64.bin
+
+  tasks:
+
+  - name: Download and install license for Cumulus Linux NOS   
+    shell: 'cl-license -i {{ license_file }}'
+    tags: cl-install
+
+  - name: restart switchd service
+    shell: 'systemctl restart switchd.service'
+    tags: restart-switchd

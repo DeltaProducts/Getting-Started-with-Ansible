@@ -1,0 +1,8 @@
+---
+
+- hosts: localhost 
+  user: root 
+  sudo: yes
+  tasks:
+  - name: Execute script
+    command: '/bin/bash ./scripts/roi.sh' 

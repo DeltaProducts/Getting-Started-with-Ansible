@@ -1,0 +1,48 @@
+---
+
+- hosts: switches
+  remote_user: admin	 
+  become: yes
+  gather_facts: yes
+
+  vars:
+    http_server: 10.62.10.22
+    config_file: TIER2-SPINE-02.cfg 
+    install_file: http://{{ http_server }}/configs/{{ config_file }}
+
+  tasks:
+  - name: Get Switch Configuration File
+    get_url: url={{ install_file }} dest=/home/admin/{{ config_file }} mode=0755
+    tags: get url cfg
+
+  - name: Create startup-config from Configuation File
+    command: 'cp {{ config_file }} /mnt/fastpath/startup-config'
+    tags: copy cfg
+
+  - name: Configure ICOS/Fastpath Switch
+    shell: 'icos-cfg -a {{ config_file }}'
+    register: icos_cfg
+    failed_when: icos_cfg.rc != 230
+    tags: sudo icos-cfg
+
+  - name: Restart Switch
+    shell: 'shutdown -r now "Ansible updates triggered"'
+    async: 0
+    poll: 0
+    ignore_errors: true
+    become: true
+
+  - name: Wait for Switch to come Back Up
+    local_action:
+      module: wait_for
+        host={{ inventory_hostname }}
+        connect_timeout=10
+        port=22
+        delay=25
+        timeout=2500
+        state=started
+
+  - name: Show ICOS/Fastpath running configuration
+    shell: 'icos-show running-config'
+    register: running-config
+    tags: show running-config

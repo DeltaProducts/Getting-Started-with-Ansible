@@ -1,0 +1,23 @@
+---
+
+- hosts: switches
+  remote_user: admin	 
+  become: yes
+  gather_facts: no
+
+  vars:
+    http_server: 10.62.10.22
+    config_file: TIER1-CORE-01.cfg
+    install_file: http://{{ http_server }}/configs/{{ config_file }}
+
+  tasks:
+  - name: Show ICOS/Fastpath running configuration
+    shell: 'icos-show running-config'
+    register: running_config
+    tags: show running-config
+
+#  - name: "Output running-config"
+#    debug:
+#      msg: '{{ running_config.stdout.split("\r', u'") }}'
+#      var: var=cloudinit_user_data
+#      with_dict: running-config

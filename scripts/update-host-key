@@ -1,0 +1,31 @@
+#!/bin/bash
+
+#  Copyright (C) 2018 Ron Wilhelmson <ron.wilhelmson@deltaww.com>
+#
+#  
+
+##
+## update-host-key 
+##
+## History: 17APR2018 Ron.Wilhelmson Initial Creation
+
+# Dependencies: none 
+
+# Usage: update-host-key <target> <target user-id>
+
+# Example: ./update-host-key 10.62.10.34 admin
+
+
+echo ""
+echo "Generating new SSH Key on $HOSTNAME for $1"
+
+echo ""
+ssh-keygen -f "/root/.ssh/known_hosts" -R $1 
+
+echo ""
+echo "Copying new SSH Key to $2@$1"
+ssh-copy-id $2@$1
+
+echo ""
+echo "SSH Keys generated and copied to $2"
+

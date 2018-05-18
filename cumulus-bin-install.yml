@@ -1,0 +1,42 @@
+---
+
+- hosts: switches
+  remote_user: cumulus
+  become: yes
+  gather_facts: yes
+
+  vars:
+    http_server: 10.62.10.22
+    install_file: http://{{ http_server }}/cumulus-linux-3.5.0-bcm-amd64.bin
+
+  tasks:
+  - name: onie-nos-install Cumulus Linux NOS
+    become_method: sudo
+    shell: 'onie-install -f -a -i {{ install_file }}'
+    tags: onie_nos_install
+    notify:
+        - restart switch
+        - wait for switch to come back up
+
+#  - name: reboot immediately
+#    meta: flush_handlers
+#    notify:
+#        - restart switch
+#        - wait for switch to come back up
+
+  handlers:
+  - name: restart switch
+    command: shutdown -r now "Ansible updates triggered"
+    async: 0
+    poll: 0
+    ignore_errors: true
+
+  - name: wait for switch to come back up
+    become: no
+    local_action: wait_for host={{ inventory_hostname }}
+                  connect_timeout=5
+                  port=22
+                  delay=20
+                  timeout=2000
+                  state=started
+
