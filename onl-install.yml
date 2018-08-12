@@ -1,0 +1,10 @@
+---
+
+- hosts: localhost 
+  user: root 
+  sudo: yes
+
+  tasks:
+  - name: Execute script to install ONL
+    become: yes
+    command: '/bin/bash ./scripts/roi.sh' 
