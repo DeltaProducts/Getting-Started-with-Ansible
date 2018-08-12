@@ -11,7 +11,7 @@
 # DPR Lab Agema Switch AG7648
 #
 [switches]
-10.62.10.34
+10.62.10.40
 [http_server]
 10.62.10.22
 [control_server]

@@ -20,11 +20,11 @@ echo ""
 echo "Generating new SSH Key on $HOSTNAME for $1"
 
 echo ""
-ssh-keygen -f "/root/.ssh/known_hosts" -R $1 
+ssh-keygen -f "$HOME/.ssh/known_hosts" -R $1 
 
 echo ""
 echo "Copying new SSH Key to $2@$1"
-ssh-copy-id $2@$1
+ssh-copy-id -f $2@$1
 
 echo ""
 echo "SSH Keys generated and copied to $2"
