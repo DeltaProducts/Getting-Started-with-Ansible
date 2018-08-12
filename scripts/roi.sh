@@ -9,7 +9,9 @@
 ##
 ## History: 12APR2018 Ron.Wilhelmson Initial Creation
 ##          04MAY2018 Ron.Wilhelmson Update for NOS install options cumulus or icos
-
+##          25MAY2018 Ron.Wilhelmson Update for NOS install option ocnos
+##          06JUL2018 Ron.Wilhelmson Update for NOS install option onl 
+#
 # Dependencies: roi.cfg in same directory
 
 # Set environment variables from roi.cfg for switch and server names/IPs
@@ -35,9 +37,15 @@ case $NOS_install in
       ;; 
 
    ocnos) /usr/bin/ssh -a -l root $target_switch /bin/onie-nos-install http://"$http_server"/DELTA_AGC7648A-OcNOS-1.3.2.137-DC_MPLS_ZEBM-S0-P0-installer
+      echo ""
       ;;
 
-   onl) /usr/bin/ssh -a -l root $target_switch /bin/onie-nos-install http://"$http_server"/ ONL-2.0.0_ONL-OS_2018-01-17.0840-6f80df8_AMD64_INSTALLED_INSTALLER 
+   onl) { 
+        sleep 10
+        echo /bin/install_url http://"$http_server"/AG9032v1/ONL-2.0.0_ONL-OS_2018-01-17.0840-6f80df8_AMD64_INSTALLED_INSTALLER
+        sleep 60
+        echo exit
+        } | telnet $target_switch
 
 esac 
 
@@ -47,5 +55,5 @@ sleep 60
 
 echo "Rebooting switch"
 
-/usr/bin/ssh -l root $target_switch /sbin/reboot
+#/usr/bin/ssh -l root $target_switch /sbin/reboot
 
