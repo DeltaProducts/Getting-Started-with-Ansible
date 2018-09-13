@@ -1,0 +1,42 @@
+#!/bin/bash
+
+#  Copyright (C) 2018 Ron Wilhelmson <ron.wilhelmson@deltaww.com>
+#
+#  
+
+##
+## ocnos-lic-install 
+##
+## History: 10Sep2018 Ron.Wilhelmson Initial Creation
+
+# Dependencies: expect 
+#               valid ocnos license file
+
+# Usage: ocnos-lic-install 
+
+# Example: ./ocnos-lic-install
+
+switch="ocnos switch"
+address="10.62.10.27"
+port="22"
+user="ocnos"
+pass="ocnos"
+license="http://10.62.10.22/IPI-00182330CDFA.bin"
+
+VAR=$(
+expect -c " 
+        set timeout 3
+        spawn telnet -l "$user" "$address"
+        expect \"Password:\"
+        send \"$pass\n\"
+        expect \"OcNOS>\"
+        send \"show license\n\"
+        expect \"OcNOS>\"
+        send \"license get $license\n\"
+        expect \"OcNOS>\"
+        send \"show license\n\"
+        expect \"OcNOS>\"
+        send \"exit\n\"
+        ")
+
+echo "$VAR"

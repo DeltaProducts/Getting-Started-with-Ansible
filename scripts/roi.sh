@@ -11,6 +11,7 @@
 ##          04MAY2018 Ron.Wilhelmson Update for NOS install options cumulus or icos
 ##          25MAY2018 Ron.Wilhelmson Update for NOS install option ocnos
 ##          06JUL2018 Ron.Wilhelmson Update for NOS install option onl 
+##          19JUL2018 Ron.Wilhelmson Update for NOS install option cisco
 #
 # Dependencies: roi.cfg in same directory
 
@@ -28,6 +29,10 @@ echo "Sending install command to switch"
 
 
 case $NOS_install in 
+   cisco) /usr/bin/ssh -a -l root $target_switch /bin/onie-nos-install http://"$http_server"/iosxrwb-full-x.installer
+      echo ""
+      ;;
+
    cumulus) /usr/bin/ssh -a -l root $target_switch /bin/onie-nos-install http://"$http_server"/cumulus-linux-3.5.0-bcm-amd64.bin
       echo ""
       ;; 
@@ -36,7 +41,7 @@ case $NOS_install in
       echo ""
       ;; 
 
-   ocnos) /usr/bin/ssh -a -l root $target_switch /bin/onie-nos-install http://"$http_server"/DELTA_AGC7648A-OcNOS-1.3.2.137-DC_MPLS_ZEBM-S0-P0-installer
+   ocnos) /usr/bin/ssh -a -l root $target_switch /bin/onie-nos-install http://"$http_server"/DELTA_AG_7648-OcNOS-1.3.4.260-DC_MPLS_ZEBM-S0-P0-installer
       echo ""
       ;;
 
@@ -46,6 +51,7 @@ case $NOS_install in
         sleep 60
         echo exit
         } | telnet $target_switch
+
 
 esac 
 
