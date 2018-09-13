@@ -1,0 +1,10 @@
+---
+
+- hosts: localhost 
+  user: root 
+  sudo: yes
+
+  tasks:
+  - name: Execute script to install OcNOS License on switch 
+    become: yes
+    command: '/bin/bash ./scripts/ocnos-lic-install' 
